@@ -1,7 +1,6 @@
 ﻿#include <iostream>
 #include <cmath>   // Для std::pow
 #include <chrono>  // Для измерения времени
-#include <immintrin.h> // Для SIMD
 
 // Методы численного интегрирования
 
@@ -43,3 +42,27 @@ double simpson_method(double (*f)(double), double a, double b, int n) {
 double f(double x) {
     return 4.0 / (1.0 + x * x);
 }
+
+void test_integration_methods(int n) {
+    double a = 0.0;
+    double b = 1.0;
+
+    auto start = std::chrono::high_resolution_clock::now();
+    double pi_rect = rectangular_method(f, a, b, n);
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed_rect = end - start;
+    std::cout << "Метод прямоугольников: π ≈ " << pi_rect << " (время: " << elapsed_rect.count() << " с)\n";
+
+    start = std::chrono::high_resolution_clock::now();
+    double pi_trap = trapezoidal_method(f, a, b, n);
+    end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed_trap = end - start;
+    std::cout << "Метод трапеций: π ≈ " << pi_trap << " (время: " << elapsed_trap.count() << " с)\n";
+
+    start = std::chrono::high_resolution_clock::now();
+    double pi_simp = simpson_method(f, a, b, n);
+    end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed_simp = end - start;
+    std::cout << "Метод Симпсона: π ≈ " << pi_simp << " (время: " << elapsed_simp.count() << " с)\n";
+}
+
